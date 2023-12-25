@@ -1,0 +1,5 @@
+*.iso
+build/vyos-build/
+build/iso/
+build/unsquashfs/
+.env

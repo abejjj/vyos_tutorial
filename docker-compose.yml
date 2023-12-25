@@ -1,0 +1,87 @@
+version: '3.7'
+services:
+  vrouterA:
+    image: "${IMAGENAME}"
+    container_name: vrouterA
+    hostname: vrouterA
+    networks:
+      vrouter-network:
+        ipv4_address: 192.168.100.3
+      subnetA-1:
+        ipv4_address: 192.168.21.3
+    privileged: true
+    volumes:
+      - /lib/modules:/lib/modules
+    tty: true
+    env_file:
+      - ./vrouter/.env
+    command: /sbin/init
+
+  debian-a-1:
+    #image: debian:bookworm-slim
+    build: ./debian
+    container_name: debian-a-1
+    hostname: debian-a-1
+    networks:
+      subnetA-1:
+        ipv4_address: 192.168.21.2
+    privileged: true
+    cap_add:
+    - NET_ADMIN
+    tty: true
+
+  vrouterB:
+    image: "${IMAGENAME}"
+    container_name: vrouterB
+    hostname: vrouterB
+    networks:
+      vrouter-network:
+        ipv4_address: 192.168.100.2
+      subnetB-1:
+        ipv4_address: 192.168.22.3
+    privileged: true
+    volumes:
+      - /lib/modules:/lib/modules
+    tty: true
+    env_file:
+      - ./vrouter/.env
+    command: /sbin/init
+
+  debian-b-1:
+    #image: debian:bookworm-slim
+    build: ./debian
+    container_name: debian-b-1
+    hostname: debian-b-1
+    networks:
+      subnetB-1:
+        ipv4_address: 192.168.22.2
+    privileged: true
+    cap_add:
+    - NET_ADMIN
+    tty: true
+
+networks:
+  vrouter-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.100.0/28
+    driver_opts:
+      com.docker.network.container_iface_name: eth0
+
+  subnetA-1:
+    ipam: 
+      driver: default
+      config:
+        - subnet: 192.168.21.0/28
+    driver_opts:
+      com.docker.network.container_iface_name: eth1
+
+  subnetB-1:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.22.0/28
+
+    driver_opts:
+      com.docker.network.container_iface_name: eth2
