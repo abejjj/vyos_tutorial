@@ -14,7 +14,6 @@ docker run --rm -it --privileged -v $(pwd):/vyos -w /vyos vyos/vyos-build:${BUIL
 
 
 ISOFILE=$(ls  vyos-*-rolling-*.iso)
-# echo ${ISOFILE}
 
 sudo mv ./build/*.iso ../
 
@@ -25,7 +24,6 @@ cd ../
 ISOFILE=$(ls  vyos-*-rolling-*.iso)
 
 VYOSIMAGE="${ISOFILE//-amd64*.iso}"
-# echo "${VYOSIMAGE}"
 
 sudo mount -o loop ${ISOFILE} ./iso 2> /dev/null
 
@@ -38,8 +36,3 @@ sudo tar -C ./unsquashfs -c . | docker import - ${VYOSIMAGE}
 docker images  --format "{{json . }}" | jq --arg VYOSIMAGE ${VYOSIMAGE} -cr 'select(.Repository == $VYOSIMAGE) | .Repository'
 
 sudo umount ./iso
-
-sudo rm -rf ./unsquashfs
-sudo rm -rf ./vyos-build
-sudo rm -rf ./iso
-

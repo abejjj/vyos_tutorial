@@ -18,7 +18,6 @@ services:
     command: /sbin/init
 
   debian-a-1:
-    #image: debian:bookworm-slim
     build: ./debian
     container_name: debian-a-1
     hostname: debian-a-1
@@ -48,7 +47,6 @@ services:
     command: /sbin/init
 
   debian-b-1:
-    #image: debian:bookworm-slim
     build: ./debian
     container_name: debian-b-1
     hostname: debian-b-1
